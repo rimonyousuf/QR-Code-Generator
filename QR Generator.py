@@ -1,4 +1,7 @@
 from tkinter import *
+import qrcode
+from PIL import Image,ImageTk
+from resizeimage import resizeimage
 
 
 class qr_generator:
@@ -82,6 +85,7 @@ class qr_generator:
         self.var_session.set('')
         self.msg=''
         self.lbl_msg.config(text=self.msg)
+        self.qr_code.config(image='')
 
 
     def generate(self):
@@ -89,6 +93,16 @@ class qr_generator:
             self.msg='All fields are required!'
             self.lbl_msg.config(text=self.msg,fg='red')
         else:
+            qr_data=(f"Student ID: {self.var_id.get()}\nStudent Name: {self.var_name.get()}\nCourse  Name: {self.var_course.get()}\nSession Name: {self.var_session.get()}")
+            qr_code=qrcode.make(qr_data)
+            qr_code=resizeimage.resize_cover(qr_code,[180,180])
+            #print(qr_code)
+            qr_code.save("G:/Rimon Study/QR Code Generator/QR Code Image"+str(self.var_id.get())+'.png')
+
+            #QR Code Image
+            self.im=ImageTk.PhotoImage(file="G:/Rimon Study/QR Code Generator/QR Code Image"+str(self.var_id.get())+'.png')
+            self.qr_code.config(image=self.im)
+
             self.msg='QR Code Generate Successfully!'
             self.lbl_msg.config(text=self.msg,fg='green')
 
